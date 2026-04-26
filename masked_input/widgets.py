@@ -1,7 +1,7 @@
 from django.forms import TextInput
 
 
-class MaskedWidget(TextInput):
+class MaskedInput(TextInput):
     template_name = 'masked_input/masked_input.html'
 
     def __init__(self, mask, attrs=None):
