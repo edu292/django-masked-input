@@ -1,0 +1,35 @@
+<input type="text" id="{{ widget.attrs.id }}_display" placeholder="{{ widget.mask }}" maxlength="{{ widget.display_length }}" {% for k, v in widget.attrs.items %}{% if k != 'id' %} {{ k }}="{{ v }}"{% endif %}{% endfor %}>
+<input type="hidden" name="{{ widget.name }}" id="{{ widget.attrs.id }}" value="{{ widget.value }}">
+
+<script>
+  {
+    const display = document.getElementById("{{ widget.attrs.id }}_display");
+    const hidden = document.getElementById("{{ widget.attrs.id }}");
+    const mask = "{{ widget.mask }}";
+
+    function format(val) {
+        let raw = val.replace(/\D/g, "").substring(0, {{ widget.value_length }});
+        hidden.value = raw;
+
+        if (!raw) {
+            display.value = "";
+            return;
+        }
+
+        let fmt = "";
+        let idx = 0;
+        for (let char of mask) {
+            if (idx >= raw.length) break;
+            if (char === '0') {
+                fmt += raw[idx++];
+            } else {
+                fmt += char;
+            }
+        }
+        display.value = fmt;
+    }
+
+    display.addEventListener("input", e => format(e.target.value));
+    if (hidden.value) format(hidden.value);
+  }
+</script>
